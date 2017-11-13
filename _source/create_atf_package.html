@@ -224,13 +224,9 @@ Besides, it must provide certain arguments which enable to start the test with t
 37
 38
 39
-40
-41
-42
-43</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot;?&gt;</span>
+40</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot;?&gt;</span>
 <span class="nt">&lt;launch&gt;</span>
-  <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;test_goal&quot;</span> <span class="na">default=</span><span class="s">&quot;[-0.5, 0.0, 0.0]&quot;</span><span class="nt">/&gt;</span>  <span class="c">&lt;!-- This argument will be used by ATF via robots_env --&gt;</span>
-  <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;robot&quot;</span> 		<span class="na">default=</span><span class="s">&quot;burger&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;robot&quot;</span> 		<span class="na">default=</span><span class="s">&quot;waffle&quot;</span><span class="nt">/&gt;</span>
   <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;x_pos&quot;</span> 		<span class="na">default=</span><span class="s">&quot;-2.0&quot;</span><span class="nt">/&gt;</span>
   <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;y_pos&quot;</span> 		<span class="na">default=</span><span class="s">&quot;-0.5&quot;</span><span class="nt">/&gt;</span>
   <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;z_pos&quot;</span> 		<span class="na">default=</span><span class="s">&quot;0.0&quot;</span><span class="nt">/&gt;</span>
@@ -263,8 +259,6 @@ Besides, it must provide certain arguments which enable to start the test with t
   <span class="nt">&lt;param</span> <span class="na">name=</span><span class="s">&quot;amcl/initial_pose_x&quot;</span> <span class="na">value=</span><span class="s">&quot;$(arg x_pos)&quot;</span><span class="nt">/&gt;</span>
   <span class="nt">&lt;param</span> <span class="na">name=</span><span class="s">&quot;amcl/initial_pose_y&quot;</span> <span class="na">value=</span><span class="s">&quot;$(arg y_pos)&quot;</span><span class="nt">/&gt;</span>
   <span class="nt">&lt;param</span> <span class="na">name=</span><span class="s">&quot;amcl/initial_pose_a&quot;</span> <span class="na">value=</span><span class="s">&quot;$(arg z_pos)&quot;</span><span class="nt">/&gt;</span>
-  <span class="c">&lt;!-- Set test goal --&gt;</span>
-  <span class="nt">&lt;rosparam</span> <span class="na">param=</span><span class="s">&quot;test_goal&quot;</span> <span class="na">subst_value=</span><span class="s">&quot;True&quot;</span><span class="nt">&gt;</span>$(arg test_goal)<span class="nt">&lt;/rosparam&gt;</span>
 
   <span class="c">&lt;!-- Start configured rviz --&gt;</span>
   <span class="nt">&lt;node</span> <span class="na">pkg=</span><span class="s">&quot;rviz&quot;</span> <span class="na">type=</span><span class="s">&quot;rviz&quot;</span> <span class="na">name=</span><span class="s">&quot;rviz&quot;</span> <span class="na">args=</span><span class="s">&quot;-d $(find turtlebot3_navigation)/rviz/turtlebot3_nav.rviz&quot;</span><span class="nt">/&gt;</span>
@@ -374,25 +368,27 @@ Additionally, they cover two new functions that simply help to send a goal messa
 <span class="kn">from</span> <span class="nn">actionlib_msgs.msg</span> <span class="kn">import</span> <span class="n">GoalStatus</span>
 <span class="kn">from</span> <span class="nn">tf.transformations</span> <span class="kn">import</span> <span class="n">quaternion_from_euler</span>
 
+<span class="n">goal_param</span> <span class="o">=</span> <span class="s2">&quot;/atf/test_config/move_to_goal/preset_goal2d&quot;</span>
+
 <span class="k">def</span> <span class="nf">create_nav_goal</span><span class="p">(</span><span class="n">goal_2d</span><span class="p">):</span>
-    <span class="s2">&quot;Create a MoveBaseGoal with x, y (in m) and yaw (in rad).&quot;</span>
+    <span class="s2">&quot;Create a MoveBaseGoal with x, y (in m) and yaw (in deg).&quot;</span>
+
     <span class="n">rospy</span><span class="o">.</span><span class="n">loginfo</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">goal_2d</span><span class="p">))</span>
     <span class="n">goal</span> <span class="o">=</span> <span class="n">MoveBaseGoal</span><span class="p">()</span>
     <span class="n">goal</span><span class="o">.</span><span class="n">target_pose</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="s1">&#39;/map&#39;</span>
-    <span class="n">goal</span><span class="o">.</span><span class="n">target_pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">goal_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">goal</span><span class="o">.</span><span class="n">target_pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">goal_2d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">q</span> <span class="o">=</span> <span class="n">quaternion_from_euler</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">goal_2d</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">goal</span><span class="o">.</span><span class="n">target_pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">goal_2d</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span>
+    <span class="n">goal</span><span class="o">.</span><span class="n">target_pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">goal_2d</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">quaternion_from_euler</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">goal_2d</span><span class="p">[</span><span class="s2">&quot;yaw&quot;</span><span class="p">])</span>
     <span class="n">goal</span><span class="o">.</span><span class="n">target_pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span> <span class="o">=</span> <span class="n">Quaternion</span><span class="p">(</span><span class="o">*</span><span class="n">q</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">goal</span>
 
 <span class="k">def</span> <span class="nf">move_to_goal</span><span class="p">(</span><span class="n">move_base</span><span class="p">,</span> <span class="n">goal</span><span class="p">):</span>
-    <span class="s2">&quot;Send a MoveBaseGoal to the MoveBaseAction.&quot;</span>
     <span class="n">rospy</span><span class="o">.</span><span class="n">loginfo</span><span class="p">(</span><span class="s2">&quot;Send goal to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">goal</span><span class="o">.</span><span class="n">target_pose</span><span class="o">.</span><span class="n">pose</span><span class="p">)</span>
     <span class="n">move_base</span><span class="o">.</span><span class="n">send_goal</span><span class="p">(</span><span class="n">goal</span><span class="p">)</span>
     <span class="n">rospy</span><span class="o">.</span><span class="n">loginfo</span><span class="p">(</span><span class="s2">&quot;Waiting for result...&quot;</span><span class="p">)</span>
     <span class="n">move_base</span><span class="o">.</span><span class="n">wait_for_result</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">move_base</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span> <span class="o">==</span> <span class="n">GoalStatus</span><span class="o">.</span><span class="n">SUCCEEDED</span><span class="p">:</span> <span class="n">rospy</span><span class="o">.</span><span class="n">loginfo</span><span class="p">(</span><span class="s2">&quot;Reached goal!&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span> <span class="n">rospy</span><span class="o">.</span><span class="n">loginfo</span><span class="p">(</span><span class="s2">&quot;Goal not reached!&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span> <span class="n">rospy</span><span class="o">.</span><span class="n">loginfo</span><span class="p">(</span><span class="s2">&quot;Goal not reached!&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The next step is to structure the program and the evaluation. One can define certain sequences as <em>ATF test blocks</em> that can be examined regarding desired key performance indicators.
@@ -409,10 +405,11 @@ Finally, there is one more function which triggers the shutdown.</p>
 </pre></div>
 </div>
 <p>Replace the content of the <em>execute</em> function (<em>l.14-26</em>) with the following lines:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Insert your ATF test blocks here</span>
-<span class="bp">self</span><span class="o">.</span><span class="n">atf</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s2">&quot;move_to_goal&quot;</span><span class="p">)</span>
-<span class="n">move_to_goal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">move_base</span><span class="p">,</span> <span class="n">create_nav_goal</span><span class="p">(</span><span class="n">rospy</span><span class="o">.</span><span class="n">get_param</span><span class="p">(</span><span class="s2">&quot;/test_goal&quot;</span><span class="p">)))</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">atf</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s2">&quot;move_to_goal&quot;</span><span class="p">)</span>
+<span class="c1"># Send move_base goal to robot</span>
+<span class="n">move_to_goal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">move_base</span><span class="p">,</span> <span class="n">create_nav_goal</span><span class="p">(</span><span class="n">rospy</span><span class="o">.</span><span class="n">get_param</span><span class="p">(</span><span class="n">goal_param</span><span class="p">)))</span>
 <span class="bp">self</span><span class="o">.</span><span class="n">atf</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="s2">&quot;move_to_goal&quot;</span><span class="p">)</span>
+
 <span class="bp">self</span><span class="o">.</span><span class="n">atf</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -434,12 +431,12 @@ The ATF tool distinguishes therefore between three different sources:</p>
 <span class="l l-Scalar l-Scalar-Plain">testsuite_1</span><span class="p p-Indicator">:</span>
   <span class="l l-Scalar l-Scalar-Plain">test_configs</span><span class="p p-Indicator">:</span>                 <span class="c1"># You have to define at least one test_config</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">test1</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">test2</span>
   <span class="l l-Scalar l-Scalar-Plain">robots</span><span class="p p-Indicator">:</span>                       <span class="c1"># You have to define at least one robot</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">burger</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">waffle</span>
   <span class="l l-Scalar l-Scalar-Plain">robot_envs</span><span class="p p-Indicator">:</span>                   <span class="c1"># You have to define at least one robot_env</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">goal1</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">goal2</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">env1</span>
 </pre></div>
 </div>
 <p>Further configurations of the ATF package can be done in the <code class="docutils literal"><span class="pre">config/test_generation_config.yaml</span></code> file. As what concerns this training one does not need to change anything. There is e.g. the option to define a certain number of repetitions, in order to eliminate stochastic uncertainty.</p>
@@ -551,7 +548,7 @@ In the navigation use-case, we want to use ATF to benchmark the application rega
 
   <span class="l l-Scalar l-Scalar-Plain">goal2d</span><span class="p p-Indicator">:</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">x</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.5</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">y</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">y</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">-0.2</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">yaw</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
 </pre></div>
 </div>
@@ -563,7 +560,7 @@ In the navigation use-case, we want to use ATF to benchmark the application rega
 
   <span class="l l-Scalar l-Scalar-Plain">goal2d</span><span class="p p-Indicator">:</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">x</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">-0.5</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">y</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">y</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">-0.2</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">yaw</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
 </pre></div>
 </div>
