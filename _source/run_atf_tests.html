@@ -1,0 +1,299 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3. Run ATF tests &mdash; training_atf  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="training_atf  documentation" href="../index.html"/>
+        <link rel="prev" title="2. Create ATF package" href="create_atf_package.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> training_atf
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="prepare_workspace.html">1. Prepare workspace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="create_atf_package.html">2. Create ATF package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">3. Run ATF tests</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#build-and-generate-tests">3.1. Build and generate tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-the-test-apps">3.2. Run the test apps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#check-and-visualize-the-results">3.3. Check and visualize the results</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">training_atf</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>3. Run ATF tests</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/_source/run_atf_tests.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This instruction was tested on <code class="docutils literal"><span class="pre">Ubuntu</span> <span class="pre">16.04</span></code> and <code class="docutils literal"><span class="pre">ROS</span> <span class="pre">Kinetic</span> <span class="pre">Kame</span></code>.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is a modified document of <a class="reference external" href="https://github.com/ipa-fmw/atf/blob/master/doc/Examples.md">Examples.md</a></p>
+</div>
+<div class="section" id="run-atf-tests">
+<span id="run-atf-tests"></span><h1>3. Run ATF tests<a class="headerlink" href="#run-atf-tests" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="build-and-generate-tests">
+<span id="build-and-generate-tests"></span><h2>3.1. Build and generate tests<a class="headerlink" href="#build-and-generate-tests" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> ~/training_ws
+catkin_make --force-cmake
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p class="last">After <code class="docutils literal"><span class="pre">catkin_make</span> <span class="pre">--force-cmake</span></code> you will find all the generated test files in <code class="docutils literal"><span class="pre">~/training_ws/build/trutlebot3_atf/test_generated</span></code>.</p>
+</div>
+</div>
+<div class="section" id="run-the-test-apps">
+<span id="run-the-test-apps"></span><h2>3.2. Run the test apps<a class="headerlink" href="#run-the-test-apps" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">As catkin normaly uses multiple threads for executing the tests, we&#8217;ll need to limit that to only one concurrent job as running multiple gazebo instances at a time causes troubles. Thus run your tests with the <code class="docutils literal"><span class="pre">-j1</span></code> argument.</p>
+</div>
+<p>Run all tests:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> ~/training_ws
+catkin_make run_tests -j1
+</pre></div>
+</div>
+<p>or just tests from a specific package (e.g. for <code class="docutils literal"><span class="pre">trutlebot3_atf</span></code>):</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> ~/training_ws
+catkin_make atf_trutlebot3_atf -j1
+</pre></div>
+</div>
+</div>
+<div class="section" id="check-and-visualize-the-results">
+<span id="check-and-visualize-the-results"></span><h2>3.3. Check and visualize the results<a class="headerlink" href="#check-and-visualize-the-results" title="Permalink to this headline">¶</a></h2>
+<p>If all goes well, you should see the recorded bag files in <code class="docutils literal"><span class="pre">/tmp/trutlebot3_atf</span></code>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>ls /tmp/trutlebot3_atf/data
+rosbag info /tmp/trutlebot3_atf/data/ts0_c0_r0_e0_0.bag
+</pre></div>
+</div>
+<p>and the (merged) results in <code class="docutils literal"><span class="pre">/tmp/trutlebot3_atf/results_yaml</span></code>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>cat /tmp/atf_test_app_time/results_yaml/merged_ts0_c0_r0_e0.yaml
+</pre></div>
+</div>
+<p>You an use the ATF presenter to visualize the results in a webbrowser:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>rosrun atf_presenter chromium.sh
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>rosrun atf_presenter firefox.sh
+</pre></div>
+</div>
+<p>You should now see</p>
+<blockquote>
+<div><img alt="../_images/atf_presenter1.png" src="../_images/atf_presenter1.png" />
+</div></blockquote>
+<p>Please select the file <code class="docutils literal"><span class="pre">test_list.json</span></code> and all <code class="docutils literal"><span class="pre">merged_*.json</span></code> files out of the <code class="docutils literal"><span class="pre">results_json</span></code> directory.</p>
+<p>If all results could be loaded successfully you can press on the &#8216;Details&#8217; button to see the test details.
+Now for all analyzed metrics you will see a diagramm showing the average results, the min/max deviation and the allowed groundtruth tolerances.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="create_atf_package.html" class="btn btn-neutral" title="2. Create ATF package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Jonathan Hechtbauer.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
