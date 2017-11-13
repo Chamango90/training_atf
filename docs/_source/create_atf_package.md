@@ -46,31 +46,33 @@ Additionally, they cover two new functions that simply help to send a goal messa
 ```eval_rst
 .. code-block:: python
 
-  import actionlib
-  from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
-  from geometry_msgs.msg import PoseWithCovarianceStamped, Quaternion
-  from actionlib_msgs.msg import GoalStatus
-  from tf.transformations import quaternion_from_euler
+import actionlib
+from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+from geometry_msgs.msg import PoseWithCovarianceStamped, Quaternion
+from actionlib_msgs.msg import GoalStatus
+from tf.transformations import quaternion_from_euler
 
-  def create_nav_goal(goal_2d):
-      "Create a MoveBaseGoal with x, y (in m) and yaw (in rad)."
-      rospy.loginfo(type(goal_2d))
-      goal = MoveBaseGoal()
-      goal.target_pose.header.frame_id = '/map'
-      goal.target_pose.pose.position.x = goal_2d[0]
-      goal.target_pose.pose.position.y = goal_2d[1]
-      q = quaternion_from_euler(0.0, 0.0, goal_2d[2])
-      goal.target_pose.pose.orientation = Quaternion(*q.tolist())
-      return goal
+goal_param = "/atf/test_config/move_to_goal/preset_goal2d"
 
-  def move_to_goal(move_base, goal):
-      "Send a MoveBaseGoal to the MoveBaseAction."
-      rospy.loginfo("Send goal to %s", goal.target_pose.pose)
-      move_base.send_goal(goal)
-      rospy.loginfo("Waiting for result...")
-      move_base.wait_for_result()
-      if move_base.get_state() == GoalStatus.SUCCEEDED: rospy.loginfo("Reached goal!")
-      else: rospy.loginfo("Goal not reached!")
+def create_nav_goal(goal_2d):
+    "Create a MoveBaseGoal with x, y (in m) and yaw (in deg)."
+
+    rospy.loginfo(type(goal_2d))
+    goal = MoveBaseGoal()
+    goal.target_pose.header.frame_id = '/map'
+    goal.target_pose.pose.position.x = goal_2d["x"]
+    goal.target_pose.pose.position.y = goal_2d["y"]
+    q = quaternion_from_euler(0.0, 0.0, goal_2d["yaw"])
+    goal.target_pose.pose.orientation = Quaternion(*q.tolist())
+    return goal
+
+def move_to_goal(move_base, goal):
+    rospy.loginfo("Send goal to %s", goal.target_pose.pose)
+    move_base.send_goal(goal)
+    rospy.loginfo("Waiting for result...")
+    move_base.wait_for_result()
+    if move_base.get_state() == GoalStatus.SUCCEEDED: rospy.loginfo("Reached goal!")
+else: rospy.loginfo("Goal not reached!")
 ```
 
 The next step is to structure the program and the evaluation. One can define certain sequences as *ATF test blocks* that can be examined regarding desired key performance indicators.
@@ -96,11 +98,12 @@ Replace the content of the *execute* function (*l.14-26*) with the following lin
 ```eval_rst
 .. code-block:: python
 
-  # Insert your ATF test blocks here
-  self.atf.start("move_to_goal")
-  move_to_goal(self.move_base, create_nav_goal(rospy.get_param("/test_goal")))
-  self.atf.stop("move_to_goal")
-  self.atf.shutdown()
+self.atf.start("move_to_goal")
+# Send move_base goal to robot
+move_to_goal(self.move_base, create_nav_goal(rospy.get_param(goal_param)))
+self.atf.stop("move_to_goal")
+
+self.atf.shutdown()
 ```
 
 
