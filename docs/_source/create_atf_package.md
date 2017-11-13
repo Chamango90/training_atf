@@ -5,6 +5,15 @@
 
 The current work-flow intend the developer to have a dedicated ROS package for the examined application.
 
+## Download ATF template
+
+
+  ```bash
+  cd ~/training_ws/src
+  git clone https://github.com/ipa-jfh/training_atf
+  ```
+
+
 ## Launch file
 
 There is one central application launch file which will be started by ATF.
