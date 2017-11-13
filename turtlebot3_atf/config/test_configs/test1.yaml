@@ -1,6 +1,6 @@
-move_to_goal:
+test_both1:
   time: []
-  preset_goal2d:
-    - x: 0.5
-    - y: 0.0
-    - yaw: 0.0
+test_block1:
+  time: []
+test_block2:
+  time: []
