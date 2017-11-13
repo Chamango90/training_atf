@@ -11,7 +11,8 @@ from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from geometry_msgs.msg import PoseWithCovarianceStamped, Quaternion
 from actionlib_msgs.msg import GoalStatus
 from tf.transformations import quaternion_from_euler
-from math import radians, degrees
+
+goal_param = "/atf/test_config/move_to_goal/preset_goal2d"
 
 def create_nav_goal(goal_2d):
     "Create a MoveBaseGoal with x, y (in m) and yaw (in deg)."
@@ -19,9 +20,9 @@ def create_nav_goal(goal_2d):
     rospy.loginfo(type(goal_2d))
     goal = MoveBaseGoal()
     goal.target_pose.header.frame_id = '/map'
-    goal.target_pose.pose.position.x = goal_2d[0]
-    goal.target_pose.pose.position.y = goal_2d[1]
-    q = quaternion_from_euler(0.0, 0.0, radians(goal_2d[2]))
+    goal.target_pose.pose.position.x = goal_2d["x"]
+    goal.target_pose.pose.position.y = goal_2d["y"]
+    q = quaternion_from_euler(0.0, 0.0, goal_2d["yaw"])
     goal.target_pose.pose.orientation = Quaternion(*q.tolist())
     return goal
 
@@ -47,7 +48,7 @@ class Application:
 
         self.atf.start("move_to_goal")
         # Send move_base goal to robot
-        move_to_goal(self.move_base, create_nav_goal(rospy.get_param("/test_goal")))
+        move_to_goal(self.move_base, create_nav_goal(rospy.get_param(goal_param)))
         self.atf.stop("move_to_goal")
 
         self.atf.shutdown()

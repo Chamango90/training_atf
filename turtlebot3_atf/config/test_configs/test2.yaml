@@ -1,6 +1,6 @@
 move_to_goal:
   time: []
   preset_goal2d:
-    x: 0.5
+    x: -0.5
     y: -0.2
     yaw: 0.0
