@@ -6,6 +6,11 @@
 # Run ATF tests
 
 ## Build and generate tests
+
+```eval_rst
+.. TIP:: In case you could not finish the previous training step get the final code by ``cd ~/training/src/trutlebot3_atf && git checkout result``.
+```
+
 ```bash
 cd ~/training_ws
 catkin_make --force-cmake

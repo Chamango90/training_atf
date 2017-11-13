@@ -35,8 +35,6 @@
   Install the required navigation and Turtlebot3 packages:
   ```bash
   sudo apt-get install ros-kinetic-turtlebot3 ros-kinetic-turtlebot3-simulation
-
-  Maybe they also?? ros-kinetic-amcl ros-kinetic-map-server ros-kinetic-move-base ros-kinetic-urdf ros-kinetic-xacro ros-kinetic-navigation
   ```
 
 ## Install the dependendies

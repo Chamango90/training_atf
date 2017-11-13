@@ -90,12 +90,13 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="prepare_workspace.html">1. Prepare workspace</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">2. Create ATF package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#launch-file">2.1. Launch file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#test-application">2.2. Test application</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#configurations">2.3. Configurations</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#robots">2.3.1. Robots</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#robot-environments">2.3.2. Robot environments</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#tests">2.3.3. Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#download-atf-template">2.1. Download ATF template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#launch-file">2.2. Launch file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#test-application">2.3. Test application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configurations">2.4. Configurations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#robots">2.4.1. Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#robot-environments">2.4.2. Robot environments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tests">2.4.3. Tests</a></li>
 </ul>
 </li>
 </ul>
@@ -171,8 +172,15 @@
 <div class="section" id="create-atf-package">
 <span id="create-atf-package"></span><h1>2. Create ATF package<a class="headerlink" href="#create-atf-package" title="Permalink to this headline">¶</a></h1>
 <p>The current work-flow intend the developer to have a dedicated ROS package for the examined application.</p>
+<div class="section" id="download-atf-template">
+<span id="download-atf-template"></span><h2>2.1. Download ATF template<a class="headerlink" href="#download-atf-template" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> ~/training_ws/src
+git clone https://github.com/ipa-jfh/training_atf
+</pre></div>
+</div>
+</div>
 <div class="section" id="launch-file">
-<span id="launch-file"></span><h2>2.1. Launch file<a class="headerlink" href="#launch-file" title="Permalink to this headline">¶</a></h2>
+<span id="launch-file"></span><h2>2.2. Launch file<a class="headerlink" href="#launch-file" title="Permalink to this headline">¶</a></h2>
 <p>There is one central application launch file which will be started by ATF.
 It should contain all the rosnodes that are required to perform the test run. In this example we will need to run the Simulation and Navigation packages for Turtlebot3.
 Besides, it must provide certain arguments which enable to start the test with the desired variations.</p>
@@ -267,7 +275,7 @@ Besides, it must provide certain arguments which enable to start the test with t
 <p>The next step is to create the actual test application node, which ATF will automatically include into the launch file.</p>
 </div>
 <div class="section" id="test-application">
-<span id="test-application"></span><h2>2.2. Test application<a class="headerlink" href="#test-application" title="Permalink to this headline">¶</a></h2>
+<span id="test-application"></span><h2>2.3. Test application<a class="headerlink" href="#test-application" title="Permalink to this headline">¶</a></h2>
 <p>This script contains the runtime of the test application and it will be automatically executed by ATF for every test case. If this program is finished it also terminates all the nodes that have been started and proceed to the next test. The general content of the file is the following. It creates an rosnode, containing the <em>Application</em> which is structured by an <em>init</em> and an <em>execute</em> function. These should be extended by the user to fit the needs of the test application. It provides two ways to run the node. Without any arguments it will perform a <em>ROS test</em> which will jump into the <em>Test</em> class (this should not be modified by the user). However, by using the <em>standalone</em> argument one could start it manually as a typical rosnode for debugging purpose.</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
@@ -410,7 +418,7 @@ Finally, there is one more function which triggers the shutdown.</p>
 </div>
 </div>
 <div class="section" id="configurations">
-<span id="configurations"></span><h2>2.3. Configurations<a class="headerlink" href="#configurations" title="Permalink to this headline">¶</a></h2>
+<span id="configurations"></span><h2>2.4. Configurations<a class="headerlink" href="#configurations" title="Permalink to this headline">¶</a></h2>
 <p>ROS application typically consists of a multitude of components and application variations. ATF assists the developer to test all variations automatically.
 The ATF tool distinguishes therefore between three different sources:</p>
 <ul class="simple">
@@ -479,7 +487,7 @@ The ATF tool distinguishes therefore between three different sources:</p>
 </pre></div>
 </td></tr></table></div>
 <div class="section" id="robots">
-<span id="robots"></span><h3>2.3.1. Robots<a class="headerlink" href="#robots" title="Permalink to this headline">¶</a></h3>
+<span id="robots"></span><h3>2.4.1. Robots<a class="headerlink" href="#robots" title="Permalink to this headline">¶</a></h3>
 <p>For this training we want to use the <em>Turtlebot3</em> robot. It comes with two variations, one is called <em>Waffle</em> and one <em>Burger</em>. In order to run the tests with both robots we need to add the following files into the <code class="docutils literal"><span class="pre">config/robots</span></code> folder.</p>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">burger.yaml</span></code></li>
@@ -511,7 +519,7 @@ The ATF tool distinguishes therefore between three different sources:</p>
 </div>
 </div>
 <div class="section" id="robot-environments">
-<span id="robot-environments"></span><h3>2.3.2. Robot environments<a class="headerlink" href="#robot-environments" title="Permalink to this headline">¶</a></h3>
+<span id="robot-environments"></span><h3>2.4.2. Robot environments<a class="headerlink" href="#robot-environments" title="Permalink to this headline">¶</a></h3>
 <p>We only want to test the application in one environment. Thus, add the following files into the <code class="docutils literal"><span class="pre">config/robot_envs</span></code> folder.</p>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">env1.yaml</span></code></li>
@@ -522,7 +530,7 @@ The ATF tool distinguishes therefore between three different sources:</p>
 </div>
 </div>
 <div class="section" id="tests">
-<span id="tests"></span><h3>2.3.3. Tests<a class="headerlink" href="#tests" title="Permalink to this headline">¶</a></h3>
+<span id="tests"></span><h3>2.4.3. Tests<a class="headerlink" href="#tests" title="Permalink to this headline">¶</a></h3>
 <p>This section is dedicated to define the desired key performance indicators. As such, there are common metrics available to measure e.g. duration, distance and frequency. Further individual ones can be created by the developer.
 In the navigation use-case, we want to use ATF to benchmark the application regarding the execution duration and the traveled path length.</p>
 <p>We will also use this configuration to preset our desired goal poses for the navigation task.</p>
@@ -612,7 +620,6 @@ In the navigation use-case, we want to use ATF to benchmark the application rega
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
             VERSION:'',
-            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
