@@ -3,18 +3,17 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to training_atf's documentation!
+Welcome to the ATF navigation training!
 ========================================
 
+Prepare Workspace
+-----------------
+
 .. toctree::
-   :maxdepth: 2
+   :numbered:
+   :maxdepth: 1
    :caption: Contents:
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   _source/prepare_workspace
+   _source/create_atf_package
+   _source/run_atf_tests

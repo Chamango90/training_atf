@@ -19,6 +19,9 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
+import recommonmark
+from recommonmark.transform import AutoStructify
+from recommonmark.parser import CommonMarkParser
 
 
 # -- General configuration ------------------------------------------------
@@ -35,11 +38,11 @@ extensions = ['sphinx.ext.autodoc']
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
+
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
-# source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = ['.rst', '.md']
 
 # The master toctree document.
 master_doc = 'index'
@@ -164,3 +167,16 @@ texinfo_documents = [
      author, 'training_atf', 'One line description of project.',
      'Miscellaneous'),
 ]
+
+
+source_parsers = {
+    '.md': CommonMarkParser,
+}
+
+def setup(app):
+    app.add_config_value('recommonmark_config', {
+        'enable_eval_rst': True,
+        'auto_toc_tree_section': 'Contents',
+        'enable_auto_doc_ref': True,
+    }, True)
+    app.add_transform(AutoStructify)
