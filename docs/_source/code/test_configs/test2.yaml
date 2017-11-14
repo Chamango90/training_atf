@@ -1,9 +1,0 @@
-move_to_goal:
-  time: []
-  path_length:
-    - root_frame: odom
-      measured_frame: base_link
-  goal2d:
-    - x: -0.5
-    - y: -0.2
-    - yaw: 0.0

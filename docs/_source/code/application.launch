@@ -1,22 +1,26 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="robot" 		default="waffle"/>
+  <arg name="robot" 		default="waffle"/>            <!-- This argument will be used by ATF via robots -->
   <arg name="x_pos" 		default="-2.0"/>
   <arg name="y_pos" 		default="-0.5"/>
   <arg name="z_pos" 		default="0.0"/>
-  <arg name="map_file" 	default="$(find turtlebot3_atf)/map/map.yaml"/>
+  <arg name="map_file"  default="$(find turtlebot3_atf)/map/map.yaml"/>
+  <arg name="goal2d"    default="[0.5, -0.2, 0.0]"/>
+
+  <!-- Load robot description -->
+  <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch" >
+    <arg name="model" value="$(arg robot)"/>
+  </include>
 
   <!-- Start simulation of Turtlebot3 in turtlebot3_world -->
   <node pkg="tf" type="static_transform_publisher" name="camera_tf" args="-1.95 -0.55 2.0 -1.58 0 -1.58 /odom /camera_link 100"/>
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" value="$(find turtlebot3_gazebo)/models/turtlebot3.world"/>
-    <arg name="gui" value="true"/>
+    <arg name="gui" value="false"/>
   </include>
-  <param name="robot_description" command="$(find xacro)/xacro.py $(find turtlebot3_description)/urdf/turtlebot3_$(arg robot).urdf.xacro" />
-  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model turtlebot3_burger -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description" />
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model turtlebot3_$(arg robot) -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description" />
 
   <!-- Start navigation tools for Turtlebot3 and load specified map -->
-  <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch" />
   <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
   <include file="$(find turtlebot3_navigation)/launch/amcl.launch.xml"/>
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
@@ -33,6 +37,9 @@
   <param name="amcl/initial_pose_x" value="$(arg x_pos)"/>
   <param name="amcl/initial_pose_y" value="$(arg y_pos)"/>
   <param name="amcl/initial_pose_a" value="$(arg z_pos)"/>
+
+  <!-- Set goal -->
+  <rosparam param="goal2d" subst_value="True">$(arg goal2d)</rosparam>
 
   <!-- Start configured rviz -->
   <node pkg="rviz" type="rviz" name="rviz" args="-d $(find turtlebot3_navigation)/rviz/turtlebot3_nav.rviz"/>

@@ -58,17 +58,15 @@ Additionally, they cover two new functions that simply help to send a goal messa
   from actionlib_msgs.msg import GoalStatus
   from tf.transformations import quaternion_from_euler
 
-  goal_param = "/atf/test_config/move_to_goal/preset_goal2d"
-
   def create_nav_goal(goal_2d):
       "Create a MoveBaseGoal with x, y (in m) and yaw (in deg)."
 
       rospy.loginfo(type(goal_2d))
       goal = MoveBaseGoal()
       goal.target_pose.header.frame_id = '/map'
-      goal.target_pose.pose.position.x = goal_2d["x"]
-      goal.target_pose.pose.position.y = goal_2d["y"]
-      q = quaternion_from_euler(0.0, 0.0, goal_2d["yaw"])
+      goal.target_pose.pose.position.x = goal_2d[0]
+      goal.target_pose.pose.position.y = goal_2d[1]
+      q = quaternion_from_euler(0.0, 0.0, goal_2d[2])
       goal.target_pose.pose.orientation = Quaternion(*q.tolist())
       return goal
 
@@ -78,7 +76,7 @@ Additionally, they cover two new functions that simply help to send a goal messa
       rospy.loginfo("Waiting for result...")
       move_base.wait_for_result()
       if move_base.get_state() == GoalStatus.SUCCEEDED: rospy.loginfo("Reached goal!")
-  else: rospy.loginfo("Goal not reached!")
+      else: rospy.loginfo("Goal not reached!")
 ```
 
 The next step is to structure the program and the evaluation. One can define certain sequences as *ATF test blocks* that can be examined regarding desired key performance indicators.
@@ -106,7 +104,7 @@ Replace the content of the *execute* function (*l.14-26*) with the following lin
 
   self.atf.start("move_to_goal")
   # Send move_base goal to robot
-  move_to_goal(self.move_base, create_nav_goal(rospy.get_param(goal_param)))
+  move_to_goal(self.move_base, create_nav_goal(rospy.get_param("/goal2d")))
   self.atf.stop("move_to_goal")
 
   self.atf.shutdown()
@@ -160,11 +158,16 @@ For this training we want to use the *Turtlebot3* robot. It comes with two varia
 
 ### Robot environments
 
-We only want to test the application in one environment. Thus, add the following files into the `config/robot_envs` folder.
+We will use this configuration to preset our desired goal poses for the navigation task. Thus, add the following files into the `config/robot_envs` folder.
 
-- `env1.yaml`
+- `goal1.yaml`
 ```eval_rst
-.. literalinclude:: ./code/robot_envs/env1.yaml
+.. literalinclude:: ./code/robot_envs/goal1.yaml
+   :language: yaml
+```
+- `goal2.yaml`
+```eval_rst
+.. literalinclude:: ./code/robot_envs/goal2.yaml
    :language: yaml
 ```
 
@@ -173,13 +176,7 @@ We only want to test the application in one environment. Thus, add the following
 This section is dedicated to define the desired key performance indicators. As such, there are common metrics available to measure e.g. duration, distance and frequency. Further individual ones can be created by the developer.
 In the navigation use-case, we want to use ATF to benchmark the application regarding the execution duration and the traveled path length.
 
-We will also use this configuration to preset our desired goal poses for the navigation task.
 
-```eval_rst
-.. NOTE:: Alternatively, one could also set desired goal poses as arguments one each in a file of the *robot_envs* folder. The reason to define them in the test folder is that we want to have one dedicated groundtruth value per goal request and don't want to cross-test them.
-
-.. NOTE:: The ground truth value is not required for benchmarking, but for the case you want to do CI (Continuous Integration).
-```
 
 Thus, the following files have to be added into the `config/test_configs` folder.
 
@@ -188,11 +185,7 @@ Thus, the following files have to be added into the `config/test_configs` folder
 .. literalinclude:: ./code/test_configs/test1.yaml
    :language: yaml
 ```
-- `test2.yaml`
-```eval_rst
-.. literalinclude:: ./code/test_configs/test2.yaml
-   :language: yaml
-```
+
 
 ```eval_rst
 .. NOTE:: Be aware that package requires a dependency to *atf_core* and in the `CMakeList.txt` the function call to *atf_test()*
