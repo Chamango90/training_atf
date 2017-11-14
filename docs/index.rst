@@ -3,11 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. image:: ./_source/data/atf_nav.jpg
+
 Welcome to the ATF navigation training!
 ========================================
-
-Prepare Workspace
------------------
 
 .. toctree::
    :numbered:

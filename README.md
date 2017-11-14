@@ -1,3 +1,5 @@
+![ATF navigation picture](docs/_source/data/atf_nav.jpg)
+
 This is a training for [the Automated Test Framework (ATF)](https://github.com/ipa-fmw/atf).
 The goal is to benchmark the [Turtlebot3](https://github.com/ROBOTIS-GIT/turtlebot3_wiki) models for navigation.
 
