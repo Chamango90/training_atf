@@ -7,7 +7,7 @@ The current work-flow intend the developer to have a dedicated ROS package for t
 
 ## Download ATF template
 
-Download an ATF template package with the following. It already includes a `map` folder which is of specific use to this training.
+Download an ATF template package with the following. It already includes dependencies to the *Turtlebot3* and a `map` folder which is of specific use to this training.
 
 ```bash
 cd ~/training_ws/src
