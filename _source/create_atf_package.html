@@ -225,25 +225,36 @@ Besides, it must provide certain arguments which enable to start the test with t
 37
 38
 39
-40</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot;?&gt;</span>
+40
+41
+42
+43
+44
+45
+46
+47</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot;?&gt;</span>
 <span class="nt">&lt;launch&gt;</span>
-  <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;robot&quot;</span> 		<span class="na">default=</span><span class="s">&quot;waffle&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;robot&quot;</span> 		<span class="na">default=</span><span class="s">&quot;waffle&quot;</span><span class="nt">/&gt;</span>            <span class="c">&lt;!-- This argument will be used by ATF via robots --&gt;</span>
   <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;x_pos&quot;</span> 		<span class="na">default=</span><span class="s">&quot;-2.0&quot;</span><span class="nt">/&gt;</span>
   <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;y_pos&quot;</span> 		<span class="na">default=</span><span class="s">&quot;-0.5&quot;</span><span class="nt">/&gt;</span>
   <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;z_pos&quot;</span> 		<span class="na">default=</span><span class="s">&quot;0.0&quot;</span><span class="nt">/&gt;</span>
-  <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;map_file&quot;</span> 	<span class="na">default=</span><span class="s">&quot;$(find turtlebot3_atf)/map/map.yaml&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;map_file&quot;</span>  <span class="na">default=</span><span class="s">&quot;$(find turtlebot3_atf)/map/map.yaml&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;goal2d&quot;</span>    <span class="na">default=</span><span class="s">&quot;[0.5, -0.2, 0.0]&quot;</span><span class="nt">/&gt;</span>
+
+  <span class="c">&lt;!-- Load robot description --&gt;</span>
+  <span class="nt">&lt;include</span> <span class="na">file=</span><span class="s">&quot;$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch&quot;</span> <span class="nt">&gt;</span>
+    <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;model&quot;</span> <span class="na">value=</span><span class="s">&quot;$(arg robot)&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/include&gt;</span>
 
   <span class="c">&lt;!-- Start simulation of Turtlebot3 in turtlebot3_world --&gt;</span>
   <span class="nt">&lt;node</span> <span class="na">pkg=</span><span class="s">&quot;tf&quot;</span> <span class="na">type=</span><span class="s">&quot;static_transform_publisher&quot;</span> <span class="na">name=</span><span class="s">&quot;camera_tf&quot;</span> <span class="na">args=</span><span class="s">&quot;-1.95 -0.55 2.0 -1.58 0 -1.58 /odom /camera_link 100&quot;</span><span class="nt">/&gt;</span>
   <span class="nt">&lt;include</span> <span class="na">file=</span><span class="s">&quot;$(find gazebo_ros)/launch/empty_world.launch&quot;</span><span class="nt">&gt;</span>
     <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;world_name&quot;</span> <span class="na">value=</span><span class="s">&quot;$(find turtlebot3_gazebo)/models/turtlebot3.world&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;gui&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;gui&quot;</span> <span class="na">value=</span><span class="s">&quot;false&quot;</span><span class="nt">/&gt;</span>
   <span class="nt">&lt;/include&gt;</span>
-  <span class="nt">&lt;param</span> <span class="na">name=</span><span class="s">&quot;robot_description&quot;</span> <span class="na">command=</span><span class="s">&quot;$(find xacro)/xacro.py $(find turtlebot3_description)/urdf/turtlebot3_$(arg robot).urdf.xacro&quot;</span> <span class="nt">/&gt;</span>
-  <span class="nt">&lt;node</span> <span class="na">name=</span><span class="s">&quot;spawn_urdf&quot;</span> <span class="na">pkg=</span><span class="s">&quot;gazebo_ros&quot;</span> <span class="na">type=</span><span class="s">&quot;spawn_model&quot;</span> <span class="na">args=</span><span class="s">&quot;-urdf -model turtlebot3_burger -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description&quot;</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;node</span> <span class="na">name=</span><span class="s">&quot;spawn_urdf&quot;</span> <span class="na">pkg=</span><span class="s">&quot;gazebo_ros&quot;</span> <span class="na">type=</span><span class="s">&quot;spawn_model&quot;</span> <span class="na">args=</span><span class="s">&quot;-urdf -model turtlebot3_$(arg robot) -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description&quot;</span> <span class="nt">/&gt;</span>
 
   <span class="c">&lt;!-- Start navigation tools for Turtlebot3 and load specified map --&gt;</span>
-  <span class="nt">&lt;include</span> <span class="na">file=</span><span class="s">&quot;$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch&quot;</span> <span class="nt">/&gt;</span>
   <span class="nt">&lt;node</span> <span class="na">name=</span><span class="s">&quot;map_server&quot;</span> <span class="na">pkg=</span><span class="s">&quot;map_server&quot;</span> <span class="na">type=</span><span class="s">&quot;map_server&quot;</span> <span class="na">args=</span><span class="s">&quot;$(arg map_file)&quot;</span><span class="nt">/&gt;</span>
   <span class="nt">&lt;include</span> <span class="na">file=</span><span class="s">&quot;$(find turtlebot3_navigation)/launch/amcl.launch.xml&quot;</span><span class="nt">/&gt;</span>
   <span class="nt">&lt;node</span> <span class="na">pkg=</span><span class="s">&quot;move_base&quot;</span> <span class="na">type=</span><span class="s">&quot;move_base&quot;</span> <span class="na">respawn=</span><span class="s">&quot;false&quot;</span> <span class="na">name=</span><span class="s">&quot;move_base&quot;</span> <span class="na">output=</span><span class="s">&quot;screen&quot;</span><span class="nt">&gt;</span>
@@ -260,6 +271,9 @@ Besides, it must provide certain arguments which enable to start the test with t
   <span class="nt">&lt;param</span> <span class="na">name=</span><span class="s">&quot;amcl/initial_pose_x&quot;</span> <span class="na">value=</span><span class="s">&quot;$(arg x_pos)&quot;</span><span class="nt">/&gt;</span>
   <span class="nt">&lt;param</span> <span class="na">name=</span><span class="s">&quot;amcl/initial_pose_y&quot;</span> <span class="na">value=</span><span class="s">&quot;$(arg y_pos)&quot;</span><span class="nt">/&gt;</span>
   <span class="nt">&lt;param</span> <span class="na">name=</span><span class="s">&quot;amcl/initial_pose_a&quot;</span> <span class="na">value=</span><span class="s">&quot;$(arg z_pos)&quot;</span><span class="nt">/&gt;</span>
+
+  <span class="c">&lt;!-- Set goal --&gt;</span>
+  <span class="nt">&lt;rosparam</span> <span class="na">param=</span><span class="s">&quot;goal2d&quot;</span> <span class="na">subst_value=</span><span class="s">&quot;True&quot;</span><span class="nt">&gt;</span>$(arg goal2d)<span class="nt">&lt;/rosparam&gt;</span>
 
   <span class="c">&lt;!-- Start configured rviz --&gt;</span>
   <span class="nt">&lt;node</span> <span class="na">pkg=</span><span class="s">&quot;rviz&quot;</span> <span class="na">type=</span><span class="s">&quot;rviz&quot;</span> <span class="na">name=</span><span class="s">&quot;rviz&quot;</span> <span class="na">args=</span><span class="s">&quot;-d $(find turtlebot3_navigation)/rviz/turtlebot3_nav.rviz&quot;</span><span class="nt">/&gt;</span>
@@ -373,17 +387,15 @@ Additionally, they cover two new functions that simply help to send a goal messa
 <span class="kn">from</span> <span class="nn">actionlib_msgs.msg</span> <span class="kn">import</span> <span class="n">GoalStatus</span>
 <span class="kn">from</span> <span class="nn">tf.transformations</span> <span class="kn">import</span> <span class="n">quaternion_from_euler</span>
 
-<span class="n">goal_param</span> <span class="o">=</span> <span class="s2">&quot;/atf/test_config/move_to_goal/preset_goal2d&quot;</span>
-
 <span class="k">def</span> <span class="nf">create_nav_goal</span><span class="p">(</span><span class="n">goal_2d</span><span class="p">):</span>
     <span class="s2">&quot;Create a MoveBaseGoal with x, y (in m) and yaw (in deg).&quot;</span>
 
     <span class="n">rospy</span><span class="o">.</span><span class="n">loginfo</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">goal_2d</span><span class="p">))</span>
     <span class="n">goal</span> <span class="o">=</span> <span class="n">MoveBaseGoal</span><span class="p">()</span>
     <span class="n">goal</span><span class="o">.</span><span class="n">target_pose</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="s1">&#39;/map&#39;</span>
-    <span class="n">goal</span><span class="o">.</span><span class="n">target_pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">goal_2d</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span>
-    <span class="n">goal</span><span class="o">.</span><span class="n">target_pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">goal_2d</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span>
-    <span class="n">q</span> <span class="o">=</span> <span class="n">quaternion_from_euler</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">goal_2d</span><span class="p">[</span><span class="s2">&quot;yaw&quot;</span><span class="p">])</span>
+    <span class="n">goal</span><span class="o">.</span><span class="n">target_pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">goal_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">goal</span><span class="o">.</span><span class="n">target_pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">goal_2d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">quaternion_from_euler</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">goal_2d</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
     <span class="n">goal</span><span class="o">.</span><span class="n">target_pose</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span> <span class="o">=</span> <span class="n">Quaternion</span><span class="p">(</span><span class="o">*</span><span class="n">q</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">goal</span>
 
@@ -393,7 +405,7 @@ Additionally, they cover two new functions that simply help to send a goal messa
     <span class="n">rospy</span><span class="o">.</span><span class="n">loginfo</span><span class="p">(</span><span class="s2">&quot;Waiting for result...&quot;</span><span class="p">)</span>
     <span class="n">move_base</span><span class="o">.</span><span class="n">wait_for_result</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">move_base</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span> <span class="o">==</span> <span class="n">GoalStatus</span><span class="o">.</span><span class="n">SUCCEEDED</span><span class="p">:</span> <span class="n">rospy</span><span class="o">.</span><span class="n">loginfo</span><span class="p">(</span><span class="s2">&quot;Reached goal!&quot;</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span> <span class="n">rospy</span><span class="o">.</span><span class="n">loginfo</span><span class="p">(</span><span class="s2">&quot;Goal not reached!&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span> <span class="n">rospy</span><span class="o">.</span><span class="n">loginfo</span><span class="p">(</span><span class="s2">&quot;Goal not reached!&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The next step is to structure the program and the evaluation. One can define certain sequences as <em>ATF test blocks</em> that can be examined regarding desired key performance indicators.
@@ -412,7 +424,7 @@ Finally, there is one more function which triggers the shutdown.</p>
 <p>Replace the content of the <em>execute</em> function (<em>l.14-26</em>) with the following lines:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">atf</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s2">&quot;move_to_goal&quot;</span><span class="p">)</span>
 <span class="c1"># Send move_base goal to robot</span>
-<span class="n">move_to_goal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">move_base</span><span class="p">,</span> <span class="n">create_nav_goal</span><span class="p">(</span><span class="n">rospy</span><span class="o">.</span><span class="n">get_param</span><span class="p">(</span><span class="n">goal_param</span><span class="p">)))</span>
+<span class="n">move_to_goal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">move_base</span><span class="p">,</span> <span class="n">create_nav_goal</span><span class="p">(</span><span class="n">rospy</span><span class="o">.</span><span class="n">get_param</span><span class="p">(</span><span class="s2">&quot;/goal2d&quot;</span><span class="p">)))</span>
 <span class="bp">self</span><span class="o">.</span><span class="n">atf</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="s2">&quot;move_to_goal&quot;</span><span class="p">)</span>
 
 <span class="bp">self</span><span class="o">.</span><span class="n">atf</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
@@ -522,12 +534,23 @@ The ATF tool distinguishes therefore between three different sources:</p>
 </div>
 <div class="section" id="robot-environments">
 <span id="robot-environments"></span><h3>2.4.2. Robot environments<a class="headerlink" href="#robot-environments" title="Permalink to this headline">¶</a></h3>
-<p>We only want to test the application in one environment. Thus, add the following files into the <code class="docutils literal"><span class="pre">config/robot_envs</span></code> folder.</p>
+<p>We will use this configuration to preset our desired goal poses for the navigation task. Thus, add the following files into the <code class="docutils literal"><span class="pre">config/robot_envs</span></code> folder.</p>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">env1.yaml</span></code></li>
+<li><code class="docutils literal"><span class="pre">goal1.yaml</span></code></li>
 </ul>
 <div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">additional_parameters</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">{}</span>                                <span class="c1"># Name and value of additional parameter which will be included in every recording test file</span>
-<span class="l l-Scalar l-Scalar-Plain">additional_arguments</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">{}</span>                                 <span class="c1"># Name and value of additional arguments which will be included in every recording test file</span>
+<span class="l l-Scalar l-Scalar-Plain">additional_arguments</span><span class="p p-Indicator">:</span>                                    <span class="c1"># Name and value of additional arguments which will be included in every recording test file</span>
+  <span class="l l-Scalar l-Scalar-Plain">goal2d</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">[</span><span class="nv">0.5</span><span class="p p-Indicator">,</span> <span class="nv">-0.2</span><span class="p p-Indicator">,</span> <span class="nv">0.0</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">goal2.yaml</span></code></li>
+</ul>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">additional_parameters</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">{}</span>                                <span class="c1"># Name and value of additional parameter which will be included in every recording test file</span>
+<span class="l l-Scalar l-Scalar-Plain">additional_arguments</span><span class="p p-Indicator">:</span>                                    <span class="c1"># Name and value of additional arguments which will be included in every recording test file</span>
+  <span class="l l-Scalar l-Scalar-Plain">goal2d</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">[</span><span class="nv">-0.5</span><span class="p p-Indicator">,</span> <span class="nv">-0.2</span><span class="p p-Indicator">,</span> <span class="nv">0.0</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 </div>
@@ -535,15 +558,6 @@ The ATF tool distinguishes therefore between three different sources:</p>
 <span id="tests"></span><h3>2.4.3. Tests<a class="headerlink" href="#tests" title="Permalink to this headline">¶</a></h3>
 <p>This section is dedicated to define the desired key performance indicators. As such, there are common metrics available to measure e.g. duration, distance and frequency. Further individual ones can be created by the developer.
 In the navigation use-case, we want to use ATF to benchmark the application regarding the execution duration and the traveled path length.</p>
-<p>We will also use this configuration to preset our desired goal poses for the navigation task.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Alternatively, one could also set desired goal poses as arguments one each in a file of the <em>robot_envs</em> folder. The reason to define them in the test folder is that we want to have one dedicated groundtruth value per goal request and don&#8217;t want to cross-test them.</p>
-</div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The ground truth value is not required for benchmarking, but for the case you want to do CI (Continuous Integration).</p>
-</div>
 <p>Thus, the following files have to be added into the <code class="docutils literal"><span class="pre">config/test_configs</span></code> folder.</p>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">test1.yaml</span></code></li>
@@ -553,24 +567,6 @@ In the navigation use-case, we want to use ATF to benchmark the application rega
   <span class="l l-Scalar l-Scalar-Plain">path_length</span><span class="p p-Indicator">:</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">root_frame</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">odom</span>
       <span class="l l-Scalar l-Scalar-Plain">measured_frame</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">base_link</span>
-  <span class="l l-Scalar l-Scalar-Plain">goal2d</span><span class="p p-Indicator">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">x</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.5</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">y</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">-0.2</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">yaw</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-</pre></div>
-</div>
-<ul class="simple">
-<li><code class="docutils literal"><span class="pre">test2.yaml</span></code></li>
-</ul>
-<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">move_to_goal</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">time</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">[]</span>
-  <span class="l l-Scalar l-Scalar-Plain">path_length</span><span class="p p-Indicator">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">root_frame</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">odom</span>
-      <span class="l l-Scalar l-Scalar-Plain">measured_frame</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">base_link</span>
-  <span class="l l-Scalar l-Scalar-Plain">goal2d</span><span class="p p-Indicator">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">x</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">-0.5</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">y</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">-0.2</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">yaw</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
 </pre></div>
 </div>
 <div class="admonition note">
