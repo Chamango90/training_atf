@@ -5,8 +5,6 @@ find_package(catkin REQUIRED COMPONENTS
   atf_core
   roslaunch
   rospy
-  turtlebot3
-  turtlebot3_simulations
 )
 catkin_package(
    CATKIN_DEPENDS rospy

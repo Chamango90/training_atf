@@ -1,5 +1,5 @@
 move_to_goal:
   time: []
   path_length:
-    - root_frame: odom
+    - root_frame: map
       measured_frame: base_link

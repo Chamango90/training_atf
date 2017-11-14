@@ -15,8 +15,6 @@
     <depend>atf_core</depend>
     <depend>roslaunch</depend>
     <depend>rospy</depend>
-    <depend>turtlebot3</depend>
-    <depend>turtlebot3_simulations</depend>
     <test_depend>rostest</test_depend>
 
 </package>
