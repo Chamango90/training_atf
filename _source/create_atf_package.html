@@ -174,7 +174,7 @@
 <p>The current work-flow intend the developer to have a dedicated ROS package for the examined application.</p>
 <div class="section" id="download-atf-template">
 <span id="download-atf-template"></span><h2>2.1. Download ATF template<a class="headerlink" href="#download-atf-template" title="Permalink to this headline">¶</a></h2>
-<p>Download an ATF template package with the following. It already includes dependencies to the <em>Turtlebot3</em> and a <code class="docutils literal"><span class="pre">map</span></code> folder which is of specific use to this training.</p>
+<p>Download an ATF template package with the following. It already includes a <code class="docutils literal"><span class="pre">map</span></code> folder which is of specific use to this training.</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> ~/training_ws/src
 git clone https://github.com/ipa-jfh/training_atf
 </pre></div>
@@ -232,7 +232,10 @@ Besides, it must provide certain arguments which enable to start the test with t
 44
 45
 46
-47</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot;?&gt;</span>
+47
+48
+49
+50</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot;?&gt;</span>
 <span class="nt">&lt;launch&gt;</span>
   <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;robot&quot;</span> 		<span class="na">default=</span><span class="s">&quot;waffle&quot;</span><span class="nt">/&gt;</span>            <span class="c">&lt;!-- This argument will be used by ATF via robots --&gt;</span>
   <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;x_pos&quot;</span> 		<span class="na">default=</span><span class="s">&quot;-2.0&quot;</span><span class="nt">/&gt;</span>
@@ -242,9 +245,12 @@ Besides, it must provide certain arguments which enable to start the test with t
   <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;goal2d&quot;</span>    <span class="na">default=</span><span class="s">&quot;[0.5, -0.2, 0.0]&quot;</span><span class="nt">/&gt;</span>
 
   <span class="c">&lt;!-- Load robot description --&gt;</span>
-  <span class="nt">&lt;include</span> <span class="na">file=</span><span class="s">&quot;$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch&quot;</span> <span class="nt">&gt;</span>
-    <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;model&quot;</span> <span class="na">value=</span><span class="s">&quot;$(arg robot)&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;include</span> <span class="na">file=</span><span class="s">&quot;$(find turtlebot3_bringup)/launch/includes/description.launch.xml&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;arg</span> <span class="na">name=</span><span class="s">&quot;model&quot;</span> <span class="na">value=</span><span class="s">&quot;$(arg robot)&quot;</span> <span class="nt">/&gt;</span>
   <span class="nt">&lt;/include&gt;</span>
+  <span class="nt">&lt;node</span> <span class="na">pkg=</span><span class="s">&quot;robot_state_publisher&quot;</span> <span class="na">type=</span><span class="s">&quot;robot_state_publisher&quot;</span> <span class="na">name=</span><span class="s">&quot;robot_state_publisher&quot;</span> <span class="na">output=</span><span class="s">&quot;screen&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;param</span> <span class="na">name=</span><span class="s">&quot;publish_frequency&quot;</span> <span class="na">type=</span><span class="s">&quot;double&quot;</span> <span class="na">value=</span><span class="s">&quot;50.0&quot;</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/node&gt;</span>
 
   <span class="c">&lt;!-- Start simulation of Turtlebot3 in turtlebot3_world --&gt;</span>
   <span class="nt">&lt;node</span> <span class="na">pkg=</span><span class="s">&quot;tf&quot;</span> <span class="na">type=</span><span class="s">&quot;static_transform_publisher&quot;</span> <span class="na">name=</span><span class="s">&quot;camera_tf&quot;</span> <span class="na">args=</span><span class="s">&quot;-1.95 -0.55 2.0 -1.58 0 -1.58 /odom /camera_link 100&quot;</span><span class="nt">/&gt;</span>
@@ -448,12 +454,12 @@ The ATF tool distinguishes therefore between three different sources:</p>
 <span class="l l-Scalar l-Scalar-Plain">testsuite_1</span><span class="p p-Indicator">:</span>
   <span class="l l-Scalar l-Scalar-Plain">test_configs</span><span class="p p-Indicator">:</span>                 <span class="c1"># You have to define at least one test_config</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">test1</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">test2</span>
   <span class="l l-Scalar l-Scalar-Plain">robots</span><span class="p p-Indicator">:</span>                       <span class="c1"># You have to define at least one robot</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">burger</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">waffle</span>
   <span class="l l-Scalar l-Scalar-Plain">robot_envs</span><span class="p p-Indicator">:</span>                   <span class="c1"># You have to define at least one robot_env</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">env1</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">goal1</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">goal2</span>
 </pre></div>
 </div>
 <p>Further configurations of the ATF package can be done in the <code class="docutils literal"><span class="pre">config/test_generation_config.yaml</span></code> file. As what concerns this training one does not need to change anything. There is e.g. the option to define a certain number of repetitions, in order to eliminate stochastic uncertainty.</p>
@@ -477,24 +483,24 @@ The ATF tool distinguishes therefore between three different sources:</p>
 18
 19
 20
-21</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">suites_file</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">config/test_suites.yaml</span>                       <span class="c1"># Path of the test_suite file</span>
-<span class="l l-Scalar l-Scalar-Plain">test_config_path</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">config/test_configs</span>                      <span class="c1"># Path of the test_config file</span>
-<span class="l l-Scalar l-Scalar-Plain">robot_config_path</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">config/robots</span>                           <span class="c1"># Folder which contains the robot_config files</span>
-<span class="l l-Scalar l-Scalar-Plain">robot_env_config_path</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">config/robot_envs</span>                   <span class="c1"># Folder which contains the robot_env_config files</span>
-<span class="l l-Scalar l-Scalar-Plain">repetitions</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>                                             <span class="c1"># Number of repetitions per test</span>
+21</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">suites_file</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">config/test_suites.yaml</span>                                <span class="c1"># Path of the test_suite file</span>
+<span class="l l-Scalar l-Scalar-Plain">test_config_path</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">config/test_configs</span>                               <span class="c1"># Path of the test_config file</span>
+<span class="l l-Scalar l-Scalar-Plain">robot_config_path</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">config/robots</span>                                    <span class="c1"># Folder which contains the robot_config files</span>
+<span class="l l-Scalar l-Scalar-Plain">robot_env_config_path</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">config/robot_envs</span>                            <span class="c1"># Folder which contains the robot_env_config files</span>
+<span class="l l-Scalar l-Scalar-Plain">repetitions</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>                                                      <span class="c1"># Number of repetitions per test</span>
 
-<span class="l l-Scalar l-Scalar-Plain">app_executable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">application.py</span>                             <span class="c1"># Name of the application&#39;s executable file</span>
-<span class="l l-Scalar l-Scalar-Plain">additional_launch_file</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">launch/application.launch</span>          <span class="c1"># Path of the additional launch file</span>
+<span class="l l-Scalar l-Scalar-Plain">app_executable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">application.py</span>                                      <span class="c1"># Name of the application&#39;s executable file</span>
+<span class="l l-Scalar l-Scalar-Plain">additional_launch_file</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">launch/application.launch</span>                   <span class="c1"># Path of the additional launch file</span>
 
-<span class="l l-Scalar l-Scalar-Plain">bagfile_output</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">/tmp/turtlebot3_atf/data/</span>                  <span class="c1"># Folder for bagfile output</span>
-<span class="l l-Scalar l-Scalar-Plain">json_output</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">/tmp/turtlebot3_atf/results_json/</span>             <span class="c1"># Folder for the json files output</span>
-<span class="l l-Scalar l-Scalar-Plain">yaml_output</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">/tmp/turtlebot3_atf/results_yaml/</span>             <span class="c1"># Folder for the yaml files output</span>
+<span class="l l-Scalar l-Scalar-Plain">bagfile_output</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">/tmp/turtlebot3_atf/data/</span>                        <span class="c1"># Folder for bagfile output</span>
+<span class="l l-Scalar l-Scalar-Plain">json_output</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">/tmp/turtlebot3_atf/results_json/</span>                   <span class="c1"># Folder for the json files output</span>
+<span class="l l-Scalar l-Scalar-Plain">yaml_output</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">/tmp/turtlebot3_atf/results_yaml/</span>                   <span class="c1"># Folder for the yaml files output</span>
 
-<span class="l l-Scalar l-Scalar-Plain">speed_factor_analysis</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10.0</span>                                <span class="c1"># Factor to speedup analysis (can lower accuracy if to fast, especially path_length)</span>
+<span class="l l-Scalar l-Scalar-Plain">speed_factor_analysis</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10.0</span>                                         <span class="c1"># Factor to speedup analysis (can lower accuracy if to fast, especially path_length)</span>
 
-<span class="l l-Scalar l-Scalar-Plain">time_limit_recording</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">60.0</span>                                 <span class="c1"># Time limit in seconds for recording</span>
-<span class="l l-Scalar l-Scalar-Plain">time_limit_analysing</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">20.0</span>                                 <span class="c1"># Time limit in seconds for analysing</span>
-<span class="l l-Scalar l-Scalar-Plain">time_limit_uploading</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">60.0</span>                                 <span class="c1"># Time limit in seconds for uploading</span>
+<span class="l l-Scalar l-Scalar-Plain">time_limit_recording</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">60.0</span>                                          <span class="c1"># Time limit in seconds for recording</span>
+<span class="l l-Scalar l-Scalar-Plain">time_limit_analysing</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">20.0</span>                                          <span class="c1"># Time limit in seconds for analysing</span>
+<span class="l l-Scalar l-Scalar-Plain">time_limit_uploading</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">60.0</span>                                          <span class="c1"># Time limit in seconds for uploading</span>
 
 <span class="l l-Scalar l-Scalar-Plain">upload_data</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="l l-Scalar l-Scalar-Plain">upload_result</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -565,7 +571,7 @@ In the navigation use-case, we want to use ATF to benchmark the application rega
 <div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">move_to_goal</span><span class="p p-Indicator">:</span>
   <span class="l l-Scalar l-Scalar-Plain">time</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">[]</span>
   <span class="l l-Scalar l-Scalar-Plain">path_length</span><span class="p p-Indicator">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">root_frame</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">odom</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">root_frame</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">map</span>
       <span class="l l-Scalar l-Scalar-Plain">measured_frame</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">base_link</span>
 </pre></div>
 </div>
