@@ -4,8 +4,8 @@
   <arg name="x_pos" 		default="-2.0"/>
   <arg name="y_pos" 		default="-0.5"/>
   <arg name="z_pos" 		default="0.0"/>
-  <arg name="map_file" 		default="$(find turtlebot3_atf)/map/map.yaml"/>
-
+  <arg name="map_file"  default="$(find turtlebot3_atf)/map/map.yaml"/>
+  <arg name="goal2d"    default="[0.5, -0.2, 0.0]"/>
 
   <!-- Load robot description -->
   <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch" >
@@ -37,6 +37,9 @@
   <param name="amcl/initial_pose_x" value="$(arg x_pos)"/>
   <param name="amcl/initial_pose_y" value="$(arg y_pos)"/>
   <param name="amcl/initial_pose_a" value="$(arg z_pos)"/>
+
+  <!-- Set goal -->
+  <rosparam param="goal2d" subst_value="True">$(arg goal2d)</rosparam>
 
   <!-- Start configured rviz -->
   <node pkg="rviz" type="rviz" name="rviz" args="-d $(find turtlebot3_navigation)/rviz/turtlebot3_nav.rviz"/>
