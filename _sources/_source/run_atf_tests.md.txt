@@ -1,8 +1,9 @@
 ```eval_rst
 .. NOTE:: This instruction was tested on ``Ubuntu 16.04`` and ``ROS Kinetic Kame``.
-
-.. NOTE:: This is a modified document of `Examples.md <https://github.com/ipa-fmw/atf/blob/master/doc/Examples.md>`_
 ```
+
+*This is a modified document of [Examples.md](https://github.com/ipa-fmw/atf/blob/master/doc/Examples.md)*
+
 # Run ATF tests
 
 ## Build and generate tests

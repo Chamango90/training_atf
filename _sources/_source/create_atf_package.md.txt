@@ -7,6 +7,7 @@ The current work-flow intend the developer to have a dedicated ROS package for t
 
 ## Download ATF template
 
+Download an ATF template package with the following. It already includes a `map` folder which is of specific use to this training.
 
 ```bash
 cd ~/training_ws/src
@@ -27,6 +28,11 @@ The following code represents the full launch script. Add it into the according 
    :language: xml
    :linenos:
 ```
+
+```eval_rst
+.. TIP:: Set the parameter of ``<arg name="gui" value="true"/>`` to ``false`` to prevent the GUI of Gazebo to start up. You could also remove the RVIZ node as well, if you are just interested into the results.
+```
+
 The next step is to create the actual test application node, which ATF will automatically include into the launch file.
 
 ## Test application
