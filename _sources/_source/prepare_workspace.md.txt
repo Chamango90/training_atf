@@ -20,7 +20,7 @@
   .. WARNING:: To find packages for the new workspace you have to source every terminal: ``source ~/training_ws/devel/setup.bash``
   ```
   ```eval_rst
-  .. TIP:: Add the command to your bash configuration: ``echo "source/opt/ros/kinetic/setup.bash" >> ~/.bashrc``
+  .. TIP:: Add the command to your bash configuration: ``echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc``
   ```
 
 ## Install ATF
@@ -34,7 +34,7 @@
 
   Install the required navigation and Turtlebot3 packages:
   ```bash
-  sudo apt-get install ros-kinetic-turtlebot3 ros-kinetic-turtlebot3-simulation
+  sudo apt-get install ros-kinetic-turtlebot3 ros-kinetic-turtlebot3-simulations
   ```
 
 ## Install the dependendies
